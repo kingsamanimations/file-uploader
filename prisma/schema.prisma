@@ -35,7 +35,6 @@ model Folder {
 model File { 
   id        Int     @id @default(autoincrement())
   filename  String
-  path      String
   size      Int
   createdAt DateTime @default(now())
 

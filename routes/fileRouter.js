@@ -49,11 +49,9 @@ router.post("/folders/:folderId/upload", isAuth, upload.single("file"), async (r
                 filename: req.file.originalname,
                 url: result.secure_url,
                 publicId: result.public_id,
-                path: req.file.path,
                 size: req.file.size,
                 userId: req.user.id,
                 folderId: folder.id,
-                path: string
             },
         });
 
