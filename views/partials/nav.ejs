@@ -1,0 +1,13 @@
+<!-- Changeable links for users logged in or out-->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+ <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <a href="/" class="bg-light">Home</a>
+    <% if (locals.currentUser) { %>
+        <span>Hi, <%= currentUser.first_name %>, welcome to this members only website!</span>
+        <a href="/folders/">My folders</a>
+        <a href="/log-out">Log out</a>
+    <% } else { %>
+        <a href="/sign-up">Sign up</a>
+        <a href="/log-in" class="bg-light">Log in</a>
+    <% } %>
+ </nav>

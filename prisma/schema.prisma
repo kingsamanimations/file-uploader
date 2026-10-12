@@ -1,0 +1,48 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User { 
+  id        Int     @id @default(autoincrement()) 
+  username  String  @unique
+  password  String
+  folders   Folder[]
+  files     File[]
+} 
+
+model Session { 
+  id        String     @id
+  sid       String     @unique
+  data      String
+  expiresAt DateTime
+} 
+
+model Folder {
+  id        Int     @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  files     File[]
+}
+
+model File { 
+  id        Int     @id @default(autoincrement())
+  filename  String
+  path      String
+  size      Int
+  createdAt DateTime @default(now())
+
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  folderId  Int
+  folder    Folder  @relation(fields: [folderId], references: [id])
+  url       String
+  publicId  String
+}

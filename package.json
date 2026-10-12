@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "This is a members ONLY authentication webpage from The Odin Project. It is made to allow users to log in, send messages, and delete messages.",
   "main": "app.js",
+  "type": "module",
   "directories": {
     "lib": "lib"
   },
-  "type": "module",
   "scripts": {
     "start": "node app.js",
     "test": "node --test",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
     "connect-pg-simple": "^10.0.0",
     "dotenv": "^18.0.3",
     "ejs": "^6.0.1",
@@ -37,7 +38,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/kingsamanimations/file-uploader/issues"
   },

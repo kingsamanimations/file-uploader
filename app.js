@@ -1,20 +1,19 @@
-import session from "express-session";
-import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import { prisma } from "./lib/prisma.js";
-
+import "dotenv/config";
 import path from "node:path";
 import express from "express";
-//Storing reall session memory in a database I have
-import { pgSession } from "connect-pg-simple"(session);
-
+import session from "express-session";
 import passport from "passport";
-import "./config/passport";
-import userRouter from "./routes/userRouter";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import { prisma } from "./lib/prisma.js";
+import "./config/passport.js";
+import userRouter from "./routes/userRouter.js";
+import fileRouter from "./routes/fileRouter.js";
+import folderRouter from "./routes/folderRouter.js";
 
-import app from "express";
-
-app.set("views", path.join(__dirname, "views"));
+const app = express();
+app.set("views", path.join(import.meta.dirname, "views"));
 app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use(session({
@@ -30,7 +29,6 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.urlencoded({ extended: false }));
 
 
 // Acces to the current user variable in all views
@@ -40,6 +38,12 @@ app.use((req, res, next) => {
 });
 
 app.use("/", userRouter);
+
+//NEW: Added file router for uploading files
+app.use("/", fileRouter);
+
+//NEW: Added folder router for uploading files
+app.use("/folders", folderRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);

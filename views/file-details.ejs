@@ -1,0 +1,11 @@
+<%- include("partials/nav") %>
+
+<h1><%= file.filename %></h1>
+
+<ul>
+    <li>File name: <%= file.filename %></li>
+    <li>Size: <%= file.size %> bytes</li>
+    <li>Uploaded: <%= file.createdAt.toLocaleString() %></li>
+</ul>
+
+<a href="/files/<%= file.id %>/download">Download file</a>

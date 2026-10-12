@@ -1,0 +1,23 @@
+<%- include("partials/nav") %>
+<h1>My Folders</h1>
+<form action="/folders" method="POST">
+    <label for="name">Folder name:</label>
+    <input id="name" name="name" type="text" required />
+    <button type="submit">Create The Folder</button>
+</form>
+
+<h2>Folders</h2>
+<% if (folders.length === 0) { %>
+    <p>You don't have any folders yet.</p>
+<% } else { %>
+    <!-- Clickable folder links-->
+    <ul>
+        <% folders.forEach(folder => { %>
+            <li>
+                <a href="/folders/<%= folder.id %>">
+                    <%= folder.name %>
+                </a>
+            </li>
+        <% }) %>
+    </ul>
+<% } %>
