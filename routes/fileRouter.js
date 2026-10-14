@@ -4,10 +4,58 @@ import { isAuth } from "../middleware/auth.js";
 import { prisma } from "../lib/prisma.js";
 import { uploadBuffer } from "../lib/cloudinary.js"
 
+// Helper for downloading
+function downloadUrl(url) {
+    return url.replace("/upload/", "/upload/fl_attachment/");
+}
 
 // A router for the file uploading
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+
+// File Limits and a type filter to multer
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "application/pdf",
+    "text/plain",
+];
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: MAX_SIZE },
+    fileFilter: (req, file, cb) => {
+        if (ALLOWED_TYPES.includes(file.minetype)) return cb(null, true);
+        const err = new Error("That file type isn't allowed. Please use an image, pdf, gif, or text file");
+        err.isValidation = true;
+        cb(err);
+    },
+});
+
+// Helper for showing errors on the form
+function handleUpload(req, res, next) {
+    upload.single("file")(req, res, async (err) => {
+        if (!err) return next();
+        if (!(err instanceof multer.MulterError) && !err.isValidation) return next(err);
+
+        const message = 
+          err.code === "LIMIT_FILE_SIZE"
+          ? "That file is too large. The limit is 5 MB."
+          : err.message;
+
+        try {
+            const folder = await prisma.folder.findFirst({
+                where: { id: Number(req.params.folderId), userId: req.user.id },
+            });
+            if (!folder) return res.status(404).send("Folder not found");
+            res.status(400).render("upload-form", { folder, error: message });
+        } catch (e) {
+            next(e);
+        }
+    });
+}
 
 router.get("/folders/:folderId/upload", isAuth, async (req, res, next) => {
     try {
@@ -28,7 +76,11 @@ router.get("/folders/:folderId/upload", isAuth, async (req, res, next) => {
     }
 });
 
-router.post("/folders/:folderId/upload", isAuth, upload.single("file"), async (req, res, next) => {
+router.post("/folders/:folderId/upload", isAuth, handleUpload, async (req, res, next) => {
+    // Folder check against a missing file
+    if (!req.file) {
+        return res.status(400).render("upload-form", { folder, error: "Please choose a file." });
+    }
     try {
         const folder = await prisma.folder.findFirst({
             where: {
@@ -75,7 +127,7 @@ router.get("/files/:fileId/download", isAuth, async (req, res, next) => {
             return res.status(404).send("File not found");
         }
 
-        res.redirect(file.url);
+        res.redirect(downloadUrl(file.url));
     } catch (err) {
         next(err);
     }

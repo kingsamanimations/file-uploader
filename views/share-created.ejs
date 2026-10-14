@@ -1,0 +1,6 @@
+<%- include("partials/nav") %>
+<h1>Link created</h1>
+<p>Anyone with this link can view and download everything</p>
+<input type="text" value="<%= url %>" readonly size="70" />
+<p><a href="<%= url %>"><%= url %></a></p>
+<a href="/folders/<%= folder.id %>">Back to folder</a>

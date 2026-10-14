@@ -1,6 +1,7 @@
 <%- include("partials/nav") %>
 <h1><%= folder.name %></h1>
 <a href="/folders/<%= folder.id %>/upload">Upload a file</a>
+<a href="/folders/<%= folder.id %>/share">Share this folder</a>
 <h2>Files</h2>
 <% if (folder.files.length === 0) { %>
     <p>This folder is empty.</p>

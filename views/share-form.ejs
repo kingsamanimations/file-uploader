@@ -1,0 +1,10 @@
+<%- include("partials/nav") %>
+<h1>Share "<%= folder.name %>"</h1>
+<% if (error) { %><p style="color: red;"><%= error %></p><% } %>
+<!-- Sharing form -->
+<form action="/folders/<%= folder.id %>/share" method="POST">
+    <label for="duration">Link lasts for</label>
+    <input id="duration" name="duration" type="text" value="1d" required />
+    <button type="submit">Create link</button>
+</form>
+<a href="/folders/<%= folder.id %>">Back to folder</a>

@@ -9,6 +9,7 @@ import "./config/passport.js";
 import userRouter from "./routes/userRouter.js";
 import fileRouter from "./routes/fileRouter.js";
 import folderRouter from "./routes/folderRouter.js";
+import shareRouter from "./routes/shareRouter.js";
 
 const app = express();
 app.set("views", path.join(import.meta.dirname, "views"));
@@ -44,6 +45,9 @@ app.use("/", fileRouter);
 
 //NEW: Added folder router for uploading files
 app.use("/folders", folderRouter);
+
+//NEW: Added share router for sharing files
+app.use("/", shareRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);

@@ -1,0 +1,12 @@
+<%- include("partials/nav") %>
+<h1><%= folder.name %></h1>
+<p>Shared folder. This link expires on <%= link.expiresAt.toLocaleString() %>.</p>
+<ul>
+    <% folder.files.forEach(file => { %>
+        <li>
+            <%= file.filename %> (<%= Math.round(file.size / 1024) %> KB, uploaded <%= file.createdAt.toLocaleDateString() %>)
+            <!-- For downloading files-->
+            <a href="/share/<%= link.id %>/files/<%= file.id %>/download">Download</a>
+        </li>
+    <% }) %>
+</ul>
